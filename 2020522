@@ -30,3 +30,5 @@ Variable Names（变量名）：mobilephone,pwd,nodeid,nodecode
 7.1.在dos窗口输入：jmeter -n -t Pcn_MorningClook.jmx -l Pcn_Morning_Clook.jtl
 7.2.在dos窗口输入：jmeter -g Pcn_Morning_Clook.jtl -e -o 存放报告的路径/Pcn_MC_Report
 7.3.生成报告文件后使用浏览器打开Pcn_MC_Report目录下的index.html查看报告详情及分析报告总结；
+
+
