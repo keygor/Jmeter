@@ -1,0 +1,32 @@
+​JMeter2020522_PCN用户早起打卡（win）
+实例：jmeter实现pcn早起打卡压力测试
+注意：提前设置好服务器打卡时间。
+操作步骤：
+1.使用python提前造好200个用户数据（手机号、验证码），写入到csv文件中；使用jmeter将造好用户都注册（该步骤课参考pcn注册接口）；
+2.在jmeter中创建一个线程组，设置线程数、循环数、运行时间；
+2.1.在线程组下面添加一个http请求，协议：http，服务器ip：mall2.yg.sulink.cn；路径：api/MorningClock/Clock；方法：post；编码格式utf-8；使用消息体数据（body data）：
+{
+"createtime": ${__time('"'yyyy-MM-dd'T'HH:mm:ss.SS'Z"',)},
+"nodeid": ${nodeid},
+"sid": 0,
+"tm": ${__time(yyyyMMddHHmmss,)},
+"sign": "E9177DEF82A2776B108D9087DA01411F",
+"lang": "chs",
+"client": 2
+}
+2.2.添加一个http信息头管理器（可以使用抓包查看或在接口文档上看），添加一行：name列为Content-Type；value列为application/json
+2.3.添加一个乡音断言，使用响应文本断言，断言文本：成功
+2.4.在线程组下面添加一个csv数据文件设置；参数设置为：
+filename：表示的是文件的绝对路径，把刚刚造好数据的文件路径和文件名填入
+file encoding：选择UTF-8编码
+Variable Names（变量名）：mobilephone,pwd,nodeid,nodecode
+其余参数可以默认
+3.添加一个聚合报告
+4.添加一个汇总报告
+5.添加一个服务器监控 ：jp@gc - PerfMon Metrics Collector
+注意：使用该控件需要在服务器端安装：ServerAgent；安装好后使用管理员运行startAgent.bat文件；启动完后默认端口是4444；在jmeter端jp@gc - PerfMon Metrics Collector下面添加服务器的ip、端口号4444、监控的资源；
+6.添加一个查看结果树，并保存该脚本，名字为：Pcn_MorningClook或者自定义
+7.在jmeter中调试完成后使用dos窗口运行该脚本并生成测试报告，运行方式：
+7.1.在dos窗口输入：jmeter -n -t Pcn_MorningClook.jmx -l Pcn_Morning_Clook.jtl
+7.2.在dos窗口输入：jmeter -g Pcn_Morning_Clook.jtl -e -o 存放报告的路径/Pcn_MC_Report
+7.3.生成报告文件后使用浏览器打开Pcn_MC_Report目录下的index.html查看报告详情及分析报告总结；
